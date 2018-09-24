@@ -1,11 +1,13 @@
 #include "Bike.h"
 #include "ofLog.h"
 #include "ofUtils.h"
+#include "Settings.h"
 
 Bike::Bike(BikeWall* wall, ofVec2f startPos, Base4Direction startDir)
 {
 	Wall = wall;
 	Spawn(startPos, startDir);
+	Speed = Settings::getSettings()->bikeSpeed;
 }
 
 Bike::~Bike()

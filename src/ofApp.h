@@ -33,6 +33,8 @@ class ofApp : public ofBaseApp{
 
 		bool lastRestart = false;
 		int restartPin = 4;
+		
+		int updateMillis = 500;
 
 		int currentFrame = 0;
 		

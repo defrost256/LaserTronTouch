@@ -1,5 +1,6 @@
 #include "GameMap.h"
 #include "ofLog.h"
+#include "Settings.h"
 
 GameMap::GameMap(const vector<Player*> &players)
 {
@@ -14,6 +15,8 @@ GameMap::GameMap(const vector<Player*> &players)
 		Walls.push_back(wall);
 		Bikes.push_back(bike);
 	}
+	crashDistance = Settings::getSettings()->crashDist;
+	collisionFwd = Settings::getSettings()->collisionFwd;
 }
 
 GameMap::~GameMap()
@@ -25,12 +28,11 @@ int GameMap::CheckForCollision()							///todo refactor loops
 	for (int i = 0; i < Bikes.size(); i++)					//check bike-mapBounds collisions
 	{
 		Bike* currentBike = Bikes[i];
-		ofVec2f nextP = currentBike->getNextPosition(2.5);
+		ofVec2f nextP = currentBike->getNextPosition(collisionFwd);
 		for(int j = 0; j < Walls.size(); j++)
 		{
 			float dst = 0;
 			ofVec2f cp = Walls[j]->getClosestPointTo(nextP, &dst);
-			ofLogNotice() << "IAM " << nextP << " closest point is " << cp << " dst: " << dst << " chrash: " << crashDistance;
 			if(dst <= crashDistance)
 			{
 				KillBike(i);

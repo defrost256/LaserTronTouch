@@ -2,9 +2,11 @@
 
 #include "wiringPi.h"
 #include "ofUtils.h"
+#include "Settings.h"
 #include <sstream>
 //--------------------------------------------------------------
 void ofApp::setup(){
+	updateMillis = Settings::getSettings()->updateMillis;
 	ofLogNotice() << "SETUP";
 	CreatePlayers();
 	Map = new GameMap(players);
@@ -33,7 +35,7 @@ void ofApp::update(){
 	Map->Update();
 	Map->CheckForCollision();
 	SendData();
-	ofSleepMillis(500);
+	ofSleepMillis(updateMillis);
 }
 //--------------------------------------------------------------
 void ofApp::draw(){

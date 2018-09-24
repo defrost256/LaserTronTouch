@@ -66,5 +66,6 @@ private:
 	ofVec2f SpawnPoints[4] = { ofVec2f(0.05, 0.05), ofVec2f(0.05, 0.95),  ofVec2f(0.95, 0.95), ofVec2f(0.95, 0.05) };	///< List of the coordinates of possible spawn point
 	float crashDistance = 0.01f;
 	int LiveBikes = 0;			///< The number of bikes alive on the map
+	float collisionFwd = 2.5f;
 };
 

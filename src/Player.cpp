@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "ofUtils.h"
 #include "ofLog.h"
+#include "Settings.h"
 
 Player::Player(int id, int leftPin, int rightPin)
 {
@@ -9,6 +10,7 @@ Player::Player(int id, int leftPin, int rightPin)
 	RightPin = rightPin;
 	WiringPi::pinMode(leftPin, WiringPi::INPUT);	//Set up pinModes
 	WiringPi::pinMode(rightPin, WiringPi::INPUT);
+	inputUpdateMillis = Settings::getSettings()->inputUpdateMillis;
 	ofLogNotice() << "Player " << id << " created with pins(" << leftPin << "," << rightPin << ")";
 	startThread();
 }
@@ -90,6 +92,6 @@ void Player::threadedFunction()
 		lock();
 		ProcessInput();		//process input
 		unlock();
-		ofSleepMillis(50);	//wait
+		ofSleepMillis(inputUpdateMillis);	//wait
 	}
 }

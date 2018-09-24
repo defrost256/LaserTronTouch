@@ -51,10 +51,6 @@ ofVec2f PolyLine::GetClosestPoint(ofVec2f p)
 			retDsqr = tmpDst;
 			ret.set(tmp);
 		}
-		if(i == 1)
-		{
-			ofLogNotice() << "POLY Line: " << p1 << ", " << p2 << "P: " << p <<" DST: " << sqrt(tmpDst);
-		}
 	}
 	return ret;
 }

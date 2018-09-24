@@ -52,6 +52,7 @@ private:
 	bool leftLast = false;	///< True if the state of the left input was PRESSED
 	bool rightLast = false;	///< True if the state of the right input was PRESSED
 	bool hasInput;			///< True if there was a new input
+	int inputUpdateMillis = 50;
 
 	/**
 	 * Checks the input periferia, and updates the input states of the player accordingly.
