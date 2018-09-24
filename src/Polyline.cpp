@@ -1,5 +1,8 @@
 #include "Polyline.h"
 
+#include "ofMath.h"
+#include "ofLog.h"
+
 void PolyLine::AddPoint(ofVec2f p)
 {
 	points.push_back(p);
@@ -31,20 +34,28 @@ ofVec2f PolyLine::GetClosestPoint(ofVec2f p)
 	{
 		ofVec2f p1 = points[i-1];
 		ofVec2f p2 = points[i];
-		float a = p1.y - p2.y;
-		float b = p2.x - p1.x;
-		float c = -(p1.y * b + p1.x * a);
-		float s = b*p.x - a*p.y;
-		float d = a*a+b*b;
-		ofVec2f tmp((b*s-a*c)/d, (-a*s-b*c)/d);
-		float tempD = p.squareDistance(tmp); 
-		if(i == 1 || tempD < retDsqr)
+		float len = p1.distance(p2);
+		ofVec2f tmp;
+		if(len == 0)
 		{
+			tmp = p1;
+		}
+		else
+		{
+			float t = ofClamp((p - p2).dot(p1 - p2) / (len * len),0.f,1.f);
+			tmp = p2 + (t * (p1 - p2));
+		}
+		float tmpDst = p.squareDistance(tmp);
+		if(tmpDst < retDsqr)
+		{
+			retDsqr = tmpDst;
 			ret.set(tmp);
-			retDsqr = tempD;
+		}
+		if(i == 1)
+		{
+			ofLogNotice() << "POLY Line: " << p1 << ", " << p2 << "P: " << p <<" DST: " << sqrt(tmpDst);
 		}
 	}
-
 	return ret;
 }
 

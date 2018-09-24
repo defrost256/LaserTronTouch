@@ -22,31 +22,36 @@ GameMap::~GameMap()
 
 int GameMap::CheckForCollision()							///todo refactor loops
 {
-	for (int i = 0; i < Walls.size(); i++)					//check bike-wall collisions
-	{
-		for (int j = 0; j < Bikes.size(); j++)
-		{
-			ofRectangle hitBox = Bikes[j]->getHitBox();
-			if (Walls[i]->Intersects(hitBox))
-			{
-				KillBike(j);
-			}
-		}
-	}
 	for (int i = 0; i < Bikes.size(); i++)					//check bike-mapBounds collisions
 	{
-		ofRectangle hitBox = Bikes[i]->getHitBox();
-		if (hitBox.intersects(ofVec2f(0, 0), ofVec2f(0, 1)) ||
-			hitBox.intersects(ofVec2f(0, 0), ofVec2f(1, 0)) ||
-			hitBox.intersects(ofVec2f(0, 1), ofVec2f(1, 1)) ||
-			hitBox.intersects(ofVec2f(1, 0), ofVec2f(1, 1)))
+		Bike* currentBike = Bikes[i];
+		ofVec2f nextP = currentBike->getNextPosition(2.5);
+		for(int j = 0; j < Walls.size(); j++)
 		{
+			float dst = 0;
+			ofVec2f cp = Walls[j]->getClosestPointTo(nextP, &dst);
+			ofLogNotice() << "IAM " << nextP << " closest point is " << cp << " dst: " << dst << " chrash: " << crashDistance;
+			if(dst <= crashDistance)
+			{
+				KillBike(i);
+				ofLogNotice() << "Killed by wall";
+			}
+		}
+		if(!currentBike->isAlive())
+			continue;
+		if (nextP.x <= crashDistance || nextP.x >= (1 - crashDistance) || nextP.y <= crashDistance || nextP.y >= (1 - crashDistance))
+		{
+			ofLogNotice() << "Killed by map";
 			KillBike(i);
 		}
+		if(!currentBike->isAlive())
+			continue;
+		nextP.set(currentBike->getPosition());
 		for (int j = i + 1; j < Bikes.size(); j++)			//check bike-bike collisions
 		{
-			if (Bikes[j]->getHitBox().intersects(hitBox))
+			if(nextP.distance(Bikes[j]->getPosition()) <= crashDistance * 2)
 			{
+				ofLogNotice() << "Killed by other bike";
 				KillBike(i);
 				KillBike(j);
 			}

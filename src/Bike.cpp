@@ -68,6 +68,11 @@ ofVec2f Bike::getPosition()
 	return Position;
 }
 
+ofVec2f Bike::getNextPosition(float scale)
+{
+	return Position + Direction * Speed * scale;
+}
+
 int Bike::getDirection()
 {
 	return (int)_Direction;
@@ -76,6 +81,11 @@ int Bike::getDirection()
 ofRectangle Bike::getHitBox()
 {
 	return Hitbox;
+}
+
+bool Bike::isAlive()
+{
+	return alive;
 }
 
 void Bike::Kill()

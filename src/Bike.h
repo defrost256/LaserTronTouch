@@ -62,6 +62,7 @@ public:
 	 * @return The normalized position of the bike on the playfield
 	 */
 	ofVec2f getPosition();
+	ofVec2f getNextPosition(float scale);
 
 	int getDirection();
 	/**
@@ -69,6 +70,8 @@ public:
 	 * @return The hitbox of the bike
 	 */
 	ofRectangle getHitBox();
+
+	bool isAlive();
 
 	void Kill();/**< Kills the bike removing it from the playfield. Sets the state of the bike to dead, and clears its walls */
 
