@@ -46,7 +46,7 @@ ofVec2f PolyLine::GetClosestPoint(ofVec2f p)
 			tmp = p2 + (t * (p1 - p2));
 		}
 		float tmpDst = p.squareDistance(tmp);
-		if(tmpDst < retDsqr)
+		if(tmpDst < retDsqr || i == 1)
 		{
 			retDsqr = tmpDst;
 			ret.set(tmp);
