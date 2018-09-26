@@ -15,6 +15,7 @@ GameMap::GameMap(const vector<Player*> &players)
 		Walls.push_back(wall);
 		Bikes.push_back(bike);
 	}
+	LiveBikes = Bikes.size();
 	crashDistance = Settings::getSettings()->crashDist;
 	collisionFwd = Settings::getSettings()->collisionFwd;
 }
@@ -26,8 +27,10 @@ GameMap::~GameMap()
 int GameMap::CheckForCollision()							///todo refactor loops
 {
 	for (int i = 0; i < Bikes.size(); i++)					//check bike-mapBounds collisions
-	{
+	{	
 		Bike* currentBike = Bikes[i];
+		if(!currentBike->isAlive())
+			continue;
 		ofVec2f nextP = currentBike->getNextPosition(collisionFwd);
 		for(int j = 0; j < Walls.size(); j++)
 		{
@@ -85,6 +88,7 @@ void GameMap::Reset()
 		int SpawnIdx = GetSpawnPointIdx();
 		Bikes[i]->Respawn(SpawnPoints[SpawnIdx], Bike::Base4Direction((SpawnIdx + 1) % 4));
 	}
+	LiveBikes = Bikes.size();
 }
 int GameMap::GetSpawnPointIdx()
 {

@@ -47,9 +47,12 @@ class ofApp : public ofBaseApp{
 		const ofColor playerColors[4] = {ofColor::green, ofColor::red, ofColor::blue, ofColor::yellow};
 		const int playerPins[8] = {2, 3, 17, 18, 22, 23, 10, 24};
 
+		bool hasWinner = false;
+
 		void Restart();
 		void CreatePlayers();
 		void CreateServer();
 		void SendData();
+		void SendWinner();
 		
 };

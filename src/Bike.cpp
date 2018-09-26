@@ -38,7 +38,7 @@ void Bike::Spawn(ofVec2f startPos, Base4Direction startDir)
 
 void Bike::Turn(bool Left)
 {
-	ofLogNotice("Bike", "Turn %s", ofGetTimestampString().c_str());
+	ofLogNotice("Bike", "Turn"); 
 	SetDirection(Base4Direction(((int)_Direction + (Left ? 1 : 3)) % 4));		//This is some math magic you need to trust
 	Wall->AddNewLine(Position);													//On turns we need a new line to drag with the bike, we leave the previous one behind (hence the corner)
 }
@@ -51,7 +51,6 @@ void Bike::Respawn(ofVec2f startPos, Base4Direction startDir)
 #ifdef PI
 void Bike::TurnCallback(bool left)
 {
-	ofLogNotice("Bike", "TurnCallback %s", ofGetTimestampString().c_str());
 	if(alive)
 		Turn(left);
 }

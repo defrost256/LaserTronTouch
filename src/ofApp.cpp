@@ -33,7 +33,12 @@ void ofApp::update(){
 		(*it)->ExecuteInput();
 	}
 	Map->Update();
-	Map->CheckForCollision();
+	int aliveCnt = Map->CheckForCollision();
+	if(aliveCnt == 1 && !hasWinner)
+	{
+		hasWinner = true;
+		SendWinner();
+	}
 	SendData();
 	ofSleepMillis(updateMillis);
 }
@@ -117,7 +122,7 @@ void ofApp::Restart()
 	}
 	ofLogNotice() << "Msg recieved";
 	Map->Reset();
-
+	hasWinner = false;
 }
 
 void ofApp::CreatePlayers()
@@ -163,5 +168,21 @@ void ofApp::SendData()
 		dataStream << ofToString(p.x, 8) << "," << ofToString(p.y, 8) << "," << (*it)->GetDirection() << "," << (*it)->GetID();
 		std::string dataStr = dataStream.str();
 		server->Send(dataStr.c_str(), dataStr.length());
+	}
+}
+
+void ofApp::SendWinner()
+{
+	for(auto player = players.begin(); player != players.end(); player++)
+	{
+		if((*player)->bike->isAlive())
+		{
+			ofLogNotice() << "Winner is Player " << (*player)->GetID() + 1;
+			std::stringstream winnerStream;
+			winnerStream << "winner " << ofToString((*player)->GetID());
+			std::string winnerStr = winnerStream.str();
+			server->Send(winnerStr.c_str(), winnerStr.length());
+			return;
+		}
 	}
 }

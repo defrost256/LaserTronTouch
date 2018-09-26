@@ -32,7 +32,6 @@ void Player::ExecuteInput()
 	lock();
 	if(hasInput)																//if there is new input
 	{
-		ofLogNotice("Player", "EXECUTE %s", ofGetTimestampString().c_str());
 		if(leftLast)															//check left or right
 			bike->TurnCallback(true);
 		else if(rightLast)
@@ -69,7 +68,7 @@ void Player::ProcessInput()
 	{
 		if(leftCurrent && !hasInput)			//and the button is pressed
 		{
-			ofLogNotice("Player", "TURN LEFT %s", ofGetTimestampString().c_str());
+			ofLogNotice("Player", "TURN LEFT");
 			hasInput = true;	//set input state
 		}
 		leftLast = leftCurrent;
@@ -78,7 +77,7 @@ void Player::ProcessInput()
 	{
 		if(rightCurrent && !hasInput)
 		{
-			ofLogNotice("Player", "TURN RIGHT %s", ofGetTimestampString().c_str());
+			ofLogNotice("Player", "TURN RIGHT");
 			hasInput = true;
 		}
 		rightLast = rightCurrent;
