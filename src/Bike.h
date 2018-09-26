@@ -104,4 +104,3 @@ private:
 	 */
 	void SetDirection(Base4Direction d);
 };
-

@@ -42,5 +42,7 @@ void Settings::ParseData(std::string token, std::string value)
 		collisionFwd = ofToFloat(value);
 	else if(token == "inputUpdateMillis")
 		inputUpdateMillis = ofToInt(value);
+	else if(token == "positiveDir")
+		positiveDir = (ofToInt(value) == 0 ? false : true);
 	else return;
 }

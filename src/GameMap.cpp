@@ -9,8 +9,9 @@ GameMap::GameMap(const vector<Player*> &players)
 	{
 		(*it)->Map = this;											//assign this map
 		BikeWall *wall = new BikeWall();				//create a wall
-		int SpawnIdx = GetSpawnPointIdx();							//get a spawn point
-		Bike *bike = new Bike(wall, SpawnPoints[SpawnIdx], Bike::Base4Direction((SpawnIdx + 1) % 4));		//Create a bike
+		//int SpawnIdx = GetSpawnPointIdx();							//get a spawn point
+		int SpawnIdx = Bikes.size();
+		Bike *bike = new Bike(wall, SpawnPoints[SpawnIdx], GetStartDirection(SpawnIdx));		//Create a bike
 		(*it)->bike = bike;
 		Walls.push_back(wall);
 		Bikes.push_back(bike);
@@ -27,7 +28,7 @@ GameMap::~GameMap()
 int GameMap::CheckForCollision()							///todo refactor loops
 {
 	for (int i = 0; i < Bikes.size(); i++)					//check bike-mapBounds collisions
-	{	
+	{
 		Bike* currentBike = Bikes[i];
 		if(!currentBike->isAlive())
 			continue;
@@ -75,8 +76,9 @@ void GameMap::Update()
 
 void GameMap::RespawnBike(int idx)
 {
-	int SpawnIdx = GetSpawnPointIdx();		//Get spawn point
-	Bikes[idx]->Respawn(SpawnPoints[SpawnIdx], Bike::Base4Direction((SpawnIdx + 1) % 4));	//respawn bike
+	//int SpawnIdx = GetSpawnPointIdx();		//Get spawn point
+	int SpawnIdx = idx;
+	Bikes[idx]->Respawn(SpawnPoints[SpawnIdx], GetStartDirection(SpawnIdx));	//respawn bike
 	LiveBikes++;
 }
 
@@ -85,8 +87,9 @@ void GameMap::Reset()
 	for(int i = 0; i < Bikes.size(); i++)
 	{
 		Bikes[i]->Kill();	//Kill bikes (only dead bikes can respawn)
-		int SpawnIdx = GetSpawnPointIdx();
-		Bikes[i]->Respawn(SpawnPoints[SpawnIdx], Bike::Base4Direction((SpawnIdx + 1) % 4));
+		//int SpawnIdx = GetSpawnPointIdx();
+		int SpawnIdx = i;
+		Bikes[i]->Respawn(SpawnPoints[SpawnIdx], GetStartDirection(SpawnIdx));
 	}
 	LiveBikes = Bikes.size();
 }
@@ -118,4 +121,25 @@ void GameMap::KillBike(int idx)
 	ofLogNotice("Map", "KILL");
 	Bikes[idx]->Kill();
 	LiveBikes--;
+}
+
+Bike::Base4Direction GameMap::GetStartDirection(int spawnIdx)
+{
+	//return Bike::Base4Direction((spawnIdx + 1) % 4);
+	if(positiveDir)
+	{
+		if(spawnIdx == 0 || spawnIdx == 3)
+			return Bike::Base4Direction(spawnIdx);
+		if(spawnIdx == 2)
+			return Bike::Base4Direction(1);
+		return Bike::Base4Direction(2);
+	}
+	else
+	{
+		if(spawnIdx == 0 || spawnIdx == 3)
+			return Bike::Base4Direction((spawnIdx + 2) % 4);
+		if(spawnIdx == 1)
+			return Bike::Base4Direction(0);
+		return Bike::Base4Direction(3);
+	}
 }

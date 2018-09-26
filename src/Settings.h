@@ -13,10 +13,11 @@ public:
 	float crashDist = 0.01f;
 	float collisionFwd = 2.5f;
 	int inputUpdateMillis = 50;
+	bool positiveDir = true;
 private:
 
 	static Settings* settings;
 	Settings();
-	
+
 	void ParseData(std::string token, std::string value);
 };
