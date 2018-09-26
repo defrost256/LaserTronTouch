@@ -19,6 +19,7 @@ GameMap::GameMap(const vector<Player*> &players)
 	LiveBikes = Bikes.size();
 	crashDistance = Settings::getSettings()->crashDist;
 	collisionFwd = Settings::getSettings()->collisionFwd;
+	positiveDir = Settings::getSettings()->positiveDir;
 }
 
 GameMap::~GameMap()
