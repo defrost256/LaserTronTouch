@@ -95,12 +95,12 @@ void GameMap::Reset()
 	LiveBikes = Bikes.size();
 }
 
-void AddBoxWall(ofRectangle rect)
+void GameMap::AddBoxWall(ofRectangle rect)
 {
 	BoxWalls.push_back(rect);
 }
 
-void ClearBoxWalls()
+void GameMap::ClearBoxWalls()
 {
 	BoxWalls.clear();
 }

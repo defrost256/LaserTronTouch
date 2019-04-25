@@ -114,15 +114,33 @@ void ofApp::Restart()
 	//usb.writeBytes("reset", 5);
 	std::string resetMsg = "reset";
 	server->Send(resetMsg.c_str(), resetMsg.length());
-	char countdownFinishedMsg[5];
+	char countdownFinishedMsg[10000];
 	ofLogNotice() << "Waiting for Restart signal from TD";
-	while(server->Receive(countdownFinishedMsg, 5) < 1)
+	bool done = false;
+	while(!done)
 	{
-		ofSleepMillis(100);
+		while(server->Receive(countdownFinishedMsg, 10000) < 1)
+		{
+			ofSleepMillis(100);
+		}
+		std::string receivedMsg(countdownFinishedMsg);
+		ofLogNotice() << "Msg received: " << receivedMsg;
+		if(receivedMsg.substr(0, 4) == "done")
+		{
+			Map->Reset();
+			hasWinner = false;
+
+			std::string boxWallsStr = receivedMsg.substr(5);
+			std::vector<ofRectangle> boxWalls = ParseBoxWallsFromMessage(boxWallsStr);
+
+			for(ofRectangle rect : boxWalls)
+			{
+				AddBoxWall(rect);
+			}
+
+			done = true;
+		}
 	}
-	ofLogNotice() << "Msg recieved";
-	Map->Reset();
-	hasWinner = false;
 }
 
 void ofApp::CreatePlayers()
@@ -185,4 +203,17 @@ void ofApp::SendWinner()
 			return;
 		}
 	}
+}
+
+std::vector<ofRectangle> ofApp::ParseBoxWallsFromMessage(std::string msg)
+{
+	std::vector<ofRectangle> ret;
+	std::vector<std::string> rectStrs = ofSplitString(msg, "\t");
+	for(std::string rectStr : rectStrs)
+	{
+		std::vector<std::string> rectAttrs = ofSplitString(rectStr, ",");
+		if(rectAttrs.size() == 4)
+			ret.push_back(ofRectangle(rectAttrs[0], rectAttrs[1], rectAttrs[2], rectAttrs[3]));
+	}
+	return ret;
 }

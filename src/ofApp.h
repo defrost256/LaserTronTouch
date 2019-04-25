@@ -4,6 +4,7 @@
 #include "GameMap.h"
 //#include "ofSerial.h"
 #include "ofxNetwork.h"
+#include "ofRectangle.h"
 /** We use this to interface with ofx, and to create the GameThread and the Etherdream
  */
 class ofApp : public ofBaseApp{
@@ -54,5 +55,6 @@ class ofApp : public ofBaseApp{
 		void CreateServer();
 		void SendData();
 		void SendWinner();
-		
+	private:
+		std::vector<ofRectangle> ParseBoxWallsFromMessage(std::string msg);
 };
