@@ -5,6 +5,7 @@
 #include "BikeWall.h"
 #include "Player.h"
 #include "ofVec2f.h"
+#include "ofRectangle.h"
 
 class Player;
 
@@ -46,6 +47,10 @@ public:
 	 */
 	void Reset();
 
+	void AddBoxWall(ofRectangle rect);
+
+	void ClearBoxWalls();
+
 private:
 
 	/**
@@ -66,8 +71,9 @@ private:
 	std::vector<BikeWall*> Walls;	///< List of the walls on the map
 	std::vector<Player*> Players;	///< List of the players currently playing
 	ofVec2f SpawnPoints[4] = { ofVec2f(0.05, 0.05), ofVec2f(0.95, 0.95),  ofVec2f(0.05, 0.95), ofVec2f(0.95, 0.05) };	///< List of the coordinates of possible spawn point
-	float crashDistance = 0.01f;
+	std::vector<ofRectangle> BoxWalls;	///< Any extra walls inside the map
+	float crashDistance = 0.01f;		///< The distance along any angle to be from the outside wall to count as crash
 	int LiveBikes = 0;			///< The number of bikes alive on the map
-	float collisionFwd = 2.5f;
-	bool positiveDir = true;
+	float collisionFwd = 2.5f;		///< The distance to look ahead when detecting collision
+	bool positiveDir = true;		///< The rotation of the starting direction of the bikes
 };

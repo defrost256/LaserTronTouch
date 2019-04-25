@@ -94,6 +94,17 @@ void GameMap::Reset()
 	}
 	LiveBikes = Bikes.size();
 }
+
+void AddBoxWall(ofRectangle rect)
+{
+	BoxWalls.push_back(rect);
+}
+
+void ClearBoxWalls()
+{
+	BoxWalls.clear();
+}
+
 int GameMap::GetSpawnPointIdx()
 {
 	if (Bikes.size() == 0 || LiveBikes == 0)	//if this is the first bike
