@@ -45,6 +45,8 @@ public:
 	 */
 	void ExecuteInput();
 
+	void AddInput(bool rightPressed, bool leftPressed);
+
 	ofVec2f GetPosition();
 	int GetDirection();
 	int GetID();
@@ -59,6 +61,7 @@ private:
 	 * Mutex
 	 */
 	void ProcessInput();
+
 	/**
 	 * Loop for processing inputs, runs on a separate thread.
 	 */

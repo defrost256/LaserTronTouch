@@ -15,7 +15,7 @@ void ofApp::setup(){
 }
 //--------------------------------------------------------------
 void ofApp::update(){
-	bool restart = (WiringPi::digitalRead(restartPin) == WiringPi::HIGH);
+	bool restart = false;//(WiringPi::digitalRead(restartPin) == WiringPi::HIGH);
 	if(restart != lastRestart)
 	{
 		ofLogNotice() << "Restart change " << restart;
@@ -27,6 +27,21 @@ void ofApp::update(){
 			ofSleepMillis(100);
 		}
 		usb.readByte();*/
+	}
+	int hasMessage = server->PeekReceive();
+	if(hasMessage > 10 && hasMessage < 20)
+	{
+		char buffer[30];
+		server->Receive(buffer, 30);
+		std::string msg(buffer);
+		if(msg.substr(0, 5) == "input")
+		{
+			HandleInputMessage(msg.substr(6));
+		}
+		else
+		{
+			ofLogNotice("Message") << "Input message not good\n" << msg;
+		}
 	}
 	for(auto it = players.begin(); it != players.end(); it++)
 	{
@@ -135,7 +150,7 @@ void ofApp::Restart()
 
 			for(ofRectangle rect : boxWalls)
 			{
-				AddBoxWall(rect);
+				Map->AddBoxWall(rect);
 			}
 
 			done = true;
@@ -208,12 +223,39 @@ void ofApp::SendWinner()
 std::vector<ofRectangle> ofApp::ParseBoxWallsFromMessage(std::string msg)
 {
 	std::vector<ofRectangle> ret;
-	std::vector<std::string> rectStrs = ofSplitString(msg, "\t");
+	std::vector<std::string> rectStrs = ofSplitString(msg, "\t", true, true);
 	for(std::string rectStr : rectStrs)
 	{
-		std::vector<std::string> rectAttrs = ofSplitString(rectStr, ",");
+		std::vector<std::string> rectAttrs = ofSplitString(rectStr, ",", true, true);
 		if(rectAttrs.size() == 4)
-			ret.push_back(ofRectangle(rectAttrs[0], rectAttrs[1], rectAttrs[2], rectAttrs[3]));
+			ret.push_back(ofRectangle(
+						ofToFloat(rectAttrs[0]),
+					       	ofToFloat(rectAttrs[1]),
+					       	ofToFloat(rectAttrs[2]), 
+						ofToFloat(rectAttrs[3])
+						));
 	}
 	return ret;
+}
+
+void ofApp::HandleInputMessage(std::string msg)
+{
+	ofLogNotice("Message") << "Message received " << msg;
+	if(msg == "reset")
+	{
+		Restart();
+		return;
+	}
+	std::vector<std::string> msgParts = ofSplitString(msg, " ", true, true);
+	if(msgParts.size() != 2)
+		return;
+	Player* player = players[ofToInt(msgParts[0])];
+	if(msgParts[1] == "left")
+	{
+		player->AddInput(false, true);
+	}
+	else
+	{
+		player->AddInput(true, false);
+	}
 }

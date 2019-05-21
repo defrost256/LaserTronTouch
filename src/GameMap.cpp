@@ -44,6 +44,14 @@ int GameMap::CheckForCollision()							///todo refactor loops
 				ofLogNotice() << "Killed by wall";
 			}
 		}
+		for(ofRectangle& wall : BoxWalls)
+		{
+			if(wall.inside(nextP))
+			{
+				KillBike(i);
+				ofLogNotice() << "Killed by window";
+			}
+		}
 		if(!currentBike->isAlive())
 			continue;
 		if (nextP.x <= crashDistance || nextP.x >= (1 - crashDistance) || nextP.y <= crashDistance || nextP.y >= (1 - crashDistance))
@@ -92,6 +100,7 @@ void GameMap::Reset()
 		int SpawnIdx = i;
 		Bikes[i]->Respawn(SpawnPoints[SpawnIdx], GetStartDirection(SpawnIdx));
 	}
+	ClearBoxWalls();
 	LiveBikes = Bikes.size();
 }
 

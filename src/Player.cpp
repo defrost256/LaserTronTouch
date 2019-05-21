@@ -61,8 +61,8 @@ void Player::ProcessInput()
 	if(hasInput)
 		return;
 	bool leftCurrent, rightCurrent;
-	leftCurrent = (WiringPi::digitalRead(LeftPin) == WiringPi::HIGH);			//Check pins
-	rightCurrent = (WiringPi::digitalRead(RightPin) == WiringPi::HIGH);
+	leftCurrent = false;//(WiringPi::digitalRead(LeftPin) == WiringPi::HIGH);			//Check pins
+	rightCurrent = false;//(WiringPi::digitalRead(RightPin) == WiringPi::HIGH);
 	//ofLogNotice() << ID << ":" << leftCurrent << "," << rightCurrent;
  	if(leftCurrent != leftLast)	//if there was change
 	{
@@ -82,6 +82,13 @@ void Player::ProcessInput()
 		}
 		rightLast = rightCurrent;
 	}
+}
+
+void Player::AddInput(bool rightPressed, bool leftPressed)
+{
+	hasInput = true;
+	leftLast = leftPressed;
+	rightLast = rightPressed;
 }
 
 void Player::threadedFunction()

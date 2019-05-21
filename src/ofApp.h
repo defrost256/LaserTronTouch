@@ -57,4 +57,5 @@ class ofApp : public ofBaseApp{
 		void SendWinner();
 	private:
 		std::vector<ofRectangle> ParseBoxWallsFromMessage(std::string msg);
+		void HandleInputMessage(std::string msg);
 };
